@@ -10,6 +10,7 @@ using System.Security.AccessControl;
 using Newtonsoft.Json;
 using System.Timers;
 using System.Net;
+using System.Diagnostics;
 
 namespace Darwin_Stats
 {
@@ -58,7 +59,14 @@ namespace Darwin_Stats
 
         private async Task MainAsync()
         {
-            await TestAPI();
+            try
+            {
+                await TestAPI();
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
             await Task.Delay(-1);
         }
 
@@ -84,7 +92,13 @@ namespace Darwin_Stats
                 }
 
                 Console.WriteLine("WARNING! New Config initialized! Need to fill in values before running!");
-                throw new Exception("NO CONFIG AVAILABLE! Go to executable path and fill out newly created file!");
+                throw new Exception("SETUP:"
+                    + "\n1. Go to Exe location and fill in your values for config.json"
+                    + "\n\tSteam64Id you can find online, \n\tTimeout is the refresh rate of data and must be at least 30, \n\tMultiFile just leave true for now, \n\tOutputDir is the location where you want the files made"
+                    + "\n2. Copy over Index.html, textscroll.js, and serveit.py to your OutputDir (These files must be in the same location!)"
+                    + "\n3. Restart the program and if you did it right, a web browser should pop up with your data!"
+                    + "\n4. You are now free to add the browser source to OBS and do any custom CSS yourself if you choose!"
+                    + "\n5. Keep the program running!");
             }
 
             using (StreamReader reader = new StreamReader(configPath))
@@ -94,11 +108,25 @@ namespace Darwin_Stats
 
             customURL = @"https://darwintracker.com/rankjson.php?id=stm-" + conf.steam64ID;
 
+            if (conf.timeout < 30)
+                conf.timeout = 30;
             timer = new Timer(conf.timeout * 1000);
 
             timer.Elapsed += GetData;
 
             timer.Start();
+
+            ProcessStartInfo server = new ProcessStartInfo
+            {
+                FileName = "python",
+                Arguments = "serveit.py 8000",
+                WorkingDirectory = conf.outputDir,
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+                CreateNoWindow = true
+            };
+            Process.Start(server);
+            Process.Start("http://localhost:8000");
 
             await Task.CompletedTask;
         }
