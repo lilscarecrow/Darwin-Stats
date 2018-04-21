@@ -126,8 +126,15 @@ namespace Darwin_Stats
                 RedirectStandardOutput = true,
                 CreateNoWindow = true
             };
-            Process.Start(server);
-            Process.Start("http://localhost:8000");
+            try
+            {
+                Process.Start(server);
+                Process.Start("http://localhost:8000");
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine("Python 3 is probably not installed. Go get it and try again.");
+            }
 
             await Task.CompletedTask;
         }
