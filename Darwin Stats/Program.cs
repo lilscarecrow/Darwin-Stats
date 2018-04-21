@@ -93,12 +93,13 @@ namespace Darwin_Stats
 
                 Console.WriteLine("WARNING! New Config initialized! Need to fill in values before running!");
                 throw new Exception("SETUP:"
-                    + "\n1. Go to Exe location and fill in your values for config.json"
+                    + "\n1. INSTALL PYTHON 3! If this isn't installed, you will recieve a file not found error!"
+                    + "\n2. Go to Exe location and fill in your values for config.json"
                     + "\n\tSteam64Id you can find online, \n\tTimeout is the refresh rate of data and must be at least 30, \n\tMultiFile just leave true for now, \n\tOutputDir is the location where you want the files made"
-                    + "\n2. Copy over Index.html, textscroll.js, and serveit.py to your OutputDir (These files must be in the same location!)"
-                    + "\n3. Restart the program and if you did it right, a web browser should pop up with your data!"
-                    + "\n4. You are now free to add the browser source to OBS and do any custom CSS yourself if you choose!"
-                    + "\n5. Keep the program running!");
+                    + "\n3. Copy over Index.html, textscroll.js, and serveit.py to your OutputDir (These files must be in the same location!)"
+                    + "\n4. Restart the program and if you did it right, a web browser should pop up with your data!"
+                    + "\n5. You are now free to add the browser source to OBS and do any custom CSS yourself if you choose!"
+                    + "\n6. Keep the program running!");
             }
 
             using (StreamReader reader = new StreamReader(configPath))
